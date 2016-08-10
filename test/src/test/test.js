@@ -1,1 +1,1 @@
-require('../../../lib/include-loader!../test.html')
+require('../../../include-loader!../test.html')
