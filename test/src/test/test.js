@@ -1,0 +1,1 @@
+require('../../../lib/include-loader!../test.html')
