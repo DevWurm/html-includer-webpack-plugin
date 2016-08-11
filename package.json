@@ -1,6 +1,6 @@
 {
   "name": "html-includer-webpack-plugin",
-  "version": "0.0.0",
+  "version": "1.0.0-beta",
   "description": "Webpack plugin to include file contents into an HTML output via html-webpack-plugin",
   "main": "lib/index.js",
   "scripts": {
@@ -35,6 +35,6 @@
   },
   "peerDependencies": {
     "webpack": "<= 1.x.x",
-    "include-loader": "0.x.x"
+    "include-loader": "1.x.x"
   }
 }
