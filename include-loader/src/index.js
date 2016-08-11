@@ -1,6 +1,6 @@
 import { load } from 'cheerio';
-import { readFile } from 'fs';
-import { dirname } from 'path';
+import { readFile, access, F_OK} from 'fs';
+import { dirname, resolve as nodePathResolve } from 'path';
 
 module.exports = function includeLoader(source) {
 
@@ -47,8 +47,22 @@ function resolveImports(dom, context, pathResolve, addDependency, addChunk) {
   // resolve all import dependencies of the current chunk asynchronously and recursive and save the promises to prms
   imports.each((i, el) => {
     const filePathPrms = new Promise((resolve, reject) => {
-      pathResolve(context, dom(el).attr('href'), (err, path) => {
-        return err ? reject(err) : resolve(path);
+      const elPath = dom(el).attr('href');
+
+      // try to resolve element path via the webpack resolver
+      pathResolve(context, elPath, (err, path) => {
+        if (err) {
+          // if no module found fall back to local file resolution (if not found, reject with original error)
+          access(nodePathResolve(context, elPath), F_OK, err2 => {
+            if (err2) {
+              reject(err);
+            } else {
+              resolve(nodePathResolve(context, elPath));
+            }
+          })
+        } else {
+          resolve(path);
+        }
       });
     });
 
@@ -95,8 +109,22 @@ function resolveStylesheets(dom, context, pathResolve, addDependency, addChunk) 
   stylesheets.each((i, el) => {
     stylesheets.each((i, el) => {
       const filePathPrms = new Promise((resolve, reject) => {
-        pathResolve(context, dom(el).attr('href'), (err, path) => {
-          return err ? reject(err) : resolve(path);
+        const elPath = dom(el).attr('href');
+
+        // try to resolve element path via the webpack resolver
+        pathResolve(context, elPath, (err, path) => {
+          if (err) {
+            // if no module found fall back to local file resolution (if not found, reject with original error)
+            access(nodePathResolve(context, elPath), F_OK, err2 => {
+              if (err2) {
+                reject(err);
+              } else {
+                resolve(nodePathResolve(context, elPath));
+              }
+            })
+          } else {
+            resolve(path);
+          }
         });
       });
 
@@ -138,8 +166,22 @@ function resolveScripts(dom, context, pathResolve, addDependency, addChunk) {
   // resolve all script dependencies of the current chunk asynchronously and save the promises to prms
   scripts.each((i, el) => {
     const filePathPrms = new Promise((resolve, reject) => {
-      pathResolve(context, dom(el).attr('src'), (err, path) => {
-        return err ? reject(err) : resolve(path);
+      const elPath = dom(el).attr('src');
+
+      // try to resolve element path via the webpack resolver
+      pathResolve(context, elPath, (err, path) => {
+        if (err) {
+          // if no module found fall back to local file resolution (if not found, reject with original error)
+          access(nodePathResolve(context, elPath), F_OK, err2 => {
+            if (err2) {
+              reject(err);
+            } else {
+              resolve(nodePathResolve(context, elPath));
+            }
+          })
+        } else {
+          resolve(path);
+        }
       });
     });
 
