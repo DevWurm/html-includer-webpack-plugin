@@ -17,7 +17,8 @@ export default class HtmlIncluderWebpackPlugin {
   }
 
   addChunk(chunk) {
-    this._chunks.push(chunk);
+    if (this._chunks.indexOf(chunk) < 0)
+      this._chunks.push(chunk);
   }
 
   _appendChunksToHtml(source) {
