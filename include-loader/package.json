@@ -25,11 +25,15 @@
   "homepage": "https://github.com/DevWurm/html-includer-webpack-plugin#readme",
   "devDependencies": {
     "babel-cli": "6.11.4",
-    "babel-plugin-transform-runtime": "^6.12.0",
+    "babel-plugin-transform-runtime": "6.12.0",
     "babel-preset-es2015": "6.13.2"
   },
   "dependencies": {
     "babel-runtime": "^6.11.6",
     "cheerio": "0.20.0"
+  },
+  "peerDependencies": {
+    "webpack": "<= 1.x.x",
+    "html-includer-webpack-plugin": "0.x.x"
   }
 }
