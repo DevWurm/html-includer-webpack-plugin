@@ -71,3 +71,31 @@ module.exports = {
 };
 ```
 You may want to have a look on how to [configure the *html-webpack-plugin*](https://github.com/ampedandwired/html-webpack-plugin#configuration)
+
+## Usage
+To include a file just load it in your depending source file via the *include-loader*:
+```javascript
+// my-depending-source.js
+require('!include-loader!./path/to/my/dependency.html');
+```
+This will inline the content of `dependency.html` into your entry point html (`index.html`).
+
+The leading `!` suppresses all other defined loaders for your dependencies filetype. Because the *include-loader* doesn't behave like a real loader and more like a hook this is the way you mostly want to use it. Omitting the `!` will lead to a broken result in the most cases, so only use the configured loaders when you really know what you do (You may consult the [details section](#details))!
+
+The `require` line will be substituted by an empty line in the build result.
+
+### Surround your file content by specified tag
+The *include-loader* provides you the possibility of surrounding the content of your source file by a html tag specified in the query of your loader invocation.
+
+Example: the `require` statement `require('!include-loader?script!./path/to/my/dependency.js');` would result in the following inline snippet in your `index.html`:
+```html
+<script>// content of dependency.js</script>
+```
+With this technique you can include static JavaScript bundles developed for the browser (like polyfills) or stylesheets.
+
+<!-- TODO: dependency resolution, deduplication -->
+
+## Details
+<!-- TODO: return value, communication, ... -->
+
+<!-- TODO: License, Contributing, Author, ... -->
