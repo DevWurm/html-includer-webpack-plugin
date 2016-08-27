@@ -1,5 +1,5 @@
 import { load } from 'cheerio';
-import { readFile, access, F_OK} from 'fs';
+import { readFile, access, F_OK } from 'fs';
 import { dirname, resolve as nodePathResolve } from 'path';
 
 module.exports = function includeLoader(source) {
@@ -42,12 +42,18 @@ function resolveHtmlDependencies(source, context, pathResolve, addDependency, ad
 
 function resolveImports(dom, context, pathResolve, addDependency, addChunk) {
   const imports = dom('link[rel="import"]');
-  const prms = []
+  const prms = [];
 
   // resolve all import dependencies of the current chunk asynchronously and recursive and save the promises to prms
   imports.each((i, el) => {
+    // ignore the input if it is required from a remote URL
+    if (/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/.test(dom(el).attr('href'))) {
+      return true;
+    }
+
     const filePathPrms = new Promise((resolve, reject) => {
       const elPath = dom(el).attr('href');
+
 
       // try to resolve element path via the webpack resolver
       pathResolve(context, elPath, (err, path) => {
@@ -107,6 +113,11 @@ function resolveStylesheets(dom, context, pathResolve, addDependency, addChunk) 
 
   // resolve all stylesheet dependencies of the current chunk asynchronously and save the promises to prms
   stylesheets.each((i, el) => {
+    // ignore the input if it is required from a remote URL
+    if (/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/.test(dom(el).attr('href'))) {
+      return true;
+    }
+
     stylesheets.each((i, el) => {
       const filePathPrms = new Promise((resolve, reject) => {
         const elPath = dom(el).attr('href');
@@ -153,7 +164,7 @@ function resolveStylesheets(dom, context, pathResolve, addDependency, addChunk) 
       return true;
     });
 
-  })
+  });
 
   // create promise, which is resolved with the completely resolved dom
   return Promise.all(prms).then(_ => dom);
@@ -165,6 +176,11 @@ function resolveScripts(dom, context, pathResolve, addDependency, addChunk) {
 
   // resolve all script dependencies of the current chunk asynchronously and save the promises to prms
   scripts.each((i, el) => {
+    // ignore the input if it is required from a remote URL
+    if (/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/.test(dom(el).attr('src'))) {
+      return true;
+    }
+
     const filePathPrms = new Promise((resolve, reject) => {
       const elPath = dom(el).attr('src');
 

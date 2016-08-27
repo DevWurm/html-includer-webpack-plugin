@@ -8,4 +8,9 @@ require('../../include-loader!./test.html');
 require('./test/test');
 
 // test if file content is wrapped in specified tag (script)
-require('../../include-loader?script!./foo.js')
+require('../../include-loader?script!./foo.js');
+
+// test if sub-dependencies are ignored if they are required from a remote URL
+require('../../include-loader!./test/urls.html');
+
+
