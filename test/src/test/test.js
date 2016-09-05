@@ -1,1 +1,0 @@
-require('../../../include-loader!../test.html')

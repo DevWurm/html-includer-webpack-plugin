@@ -1,6 +1,6 @@
 var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var HtmlIncluderWebpackPlugin = require('../lib').default;
+var HtmlIncluderWebpackPlugin = require('../../lib/index').default;
 
 module.exports = {
     entry: "./src/index.js",
@@ -10,6 +10,6 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin(),
-        new HtmlIncluderWebpackPlugin()
+        new HtmlIncluderWebpackPlugin('bundle.html')
     ]
 };
